@@ -1,3 +1,9 @@
 [submodule "y-backend-authorization-service"]
 	path = y-backend-authorization-service
 	url = git@github.com:shaynlink/y-backend-authorization-service.git
+[submodule "y-types"]
+	path = y-types
+	url = git@github.com:shaynlink/y-types.git
+[submodule "y-backend-codebase"]
+	path = y-backend-codebase
+	url = git@github.com:shaynlink/y-backend-codebase.git

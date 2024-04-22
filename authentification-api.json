@@ -1,0 +1,160 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Authentification API",
+    "summary": "Authentification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://staging.stk.re/v1",
+      "description": "Staging server"
+    },
+    {
+      "url": "https://api.stk.re/v1",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "summary": "Register a new user",
+      "description": "Register a new user",
+      "post": {
+        "summary": "Register a new user",
+        "operationId": "RegisterUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserWithPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "jwt"
+                  ],
+                  "properties": {
+                    "jwt": {
+                      "type": "string",
+                      "description": "JWT token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.4j9Z1J9Jfj"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "409": {
+            "description": "User already exists"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "summary": "Login user",
+      "description": "Login user",
+      "post": {
+        "summary": "Login user",
+        "operationId": "LoginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "jwt"
+                  ],
+                  "properties": {
+                    "jwt": {
+                      "type": "string",
+                      "description": "JWT token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.4j9Z1J9Jfj"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BasicUser": {
+        "type": "object",
+        "required": [
+          "username",
+          "email"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username",
+            "example": "user"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the user",
+            "example": "user@example.com",
+            "uniqueItems": true
+          }
+        }
+      },
+      "UserWithPassword": {
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "properties": {
+          "$ref": "#/components/schemas/BasicUser",
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "Password of the user",
+            "example": "password",
+            "required": true
+          }
+        }
+      },
+      "UserWithPicture": {
+        "type": "object",
+        "properties": {
+          "$ref": "#/components/schemas/BasicUser",
+          "picture": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the user's profile picture",
+            "example": "https://example.com/picture.jpg"
+          }
+        }
+      }
+    }
+  }
+}

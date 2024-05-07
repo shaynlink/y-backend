@@ -7,3 +7,9 @@
 [submodule "y-backend-codebase"]
 	path = y-backend-codebase
 	url = git@github.com:shaynlink/y-backend-codebase.git
+[submodule "y-posts-service"]
+	path = y-posts-service
+	url = git@github.com:shaynlink/y-posts-service.git
+[submodule "y-users-service"]
+	path = y-users-service
+	url = git@github.com:shaynlink/y-users-service.git

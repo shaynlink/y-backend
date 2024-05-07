@@ -1,158 +1,154 @@
 {
-  "openapi": "3.1.1",
+  "swagger": "2.0",
   "info": {
     "title": "Authentification API",
-    "summary": "Authentification",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "https://staging.stk.re/v1",
-      "description": "Staging server"
-    },
-    {
-      "url": "https://api.stk.re/v1",
-      "description": "Production server"
-    }
-  ],
+  "basePath": "/auth",
   "paths": {
-    "/auth/register": {
-      "summary": "Register a new user",
-      "description": "Register a new user",
+    "/register": {
       "post": {
         "summary": "Register a new user",
         "operationId": "RegisterUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserWithPassword"
-              }
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseUserWithUsername"
             }
           }
-        },
+        ],
         "responses": {
           "201": {
             "description": "User created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "jwt"
-                  ],
-                  "properties": {
-                    "jwt": {
-                      "type": "string",
-                      "description": "JWT token",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.4j9Z1J9Jfj"
-                    }
-                  }
+            "schema": {
+              "type": "object",
+              "required": [
+                "jwt"
+              ],
+              "properties": {
+                "jwt": {
+                  "type": "string",
+                  "description": "JWT token",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBmZjQwZjIwMzQwZjQwZjQwZjQwZjQwIn0sImlhdCI6MTYyNjIwNjQwMCwiZXhwIjoxNjI2MjA2NDAwfQ.1"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "409": {
-            "description": "User already exists"
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
     },
-    "/auth/login": {
-      "summary": "Login user",
-      "description": "Login user",
+    "/login": {
       "post": {
-        "summary": "Login user",
+        "summary": "Login existing user",
         "operationId": "LoginUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BasicUser"
-              }
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseUser"
             }
           }
-        },
+        ],
         "responses": {
-          "201": {
-            "description": "User login",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "jwt"
-                  ],
-                  "properties": {
-                    "jwt": {
-                      "type": "string",
-                      "description": "JWT token",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.4j9Z1J9Jfj"
-                    }
-                  }
+          "200": {
+            "description": "User logged in",
+            "schema": {
+              "type": "object",
+              "required": [
+                "jwt"
+              ],
+              "properties": {
+                "jwt": {
+                  "type": "string",
+                  "description": "JWT token",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBmZjQwZjIwMzQwZjQwZjQwZjQwZjQwIn0sImlhdCI6MTYyNjIwNjQwMCwiZXhwIjoxNjI2MjA2NDAwfQ.1"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
     }
   },
-  "components": {
-    "schemas": {
-      "BasicUser": {
-        "type": "object",
-        "required": [
-          "username",
-          "email"
-        ],
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Username",
-            "example": "user"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "Email address of the user",
-            "example": "user@example.com",
-            "uniqueItems": true
-          }
+  "x-google-backend": {
+    "address": ""
+  },
+  "definitions": {
+    "BaseUser": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "me@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
         }
-      },
-      "UserWithPassword": {
-        "type": "object",
-        "required": [
-          "password"
-        ],
-        "properties": {
-          "$ref": "#/components/schemas/BasicUser",
-          "password": {
-            "type": "string",
-            "format": "password",
-            "description": "Password of the user",
-            "example": "password",
-            "required": true
-          }
+      }
+    },
+    "BaseUserWithUsername": {
+      "$ref": "#/definitions/BaseUser",
+      "required": [
+        "username"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "me"
         }
-      },
-      "UserWithPicture": {
-        "type": "object",
-        "properties": {
-          "$ref": "#/components/schemas/BasicUser",
-          "picture": {
-            "type": "string",
-            "format": "uri",
-            "description": "URL of the user's profile picture",
-            "example": "https://example.com/picture.jpg"
-          }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     }
